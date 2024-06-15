@@ -24,5 +24,6 @@ func InitializeCommands() {
 	RootCmd.AddCommand(searchCourseCmd)
 	RootCmd.AddCommand(searchStudentCmd)
 	RootCmd.AddCommand(countCmd)
+	RootCmd.AddCommand(gradeCmd)
 	RootCmd.AddCommand(clearCmd)
 }

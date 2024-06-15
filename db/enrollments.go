@@ -230,3 +230,164 @@ func GetCourseStudentNamesEnrollments(courseId int16, semester string) ([]string
 
 	return studentNames, nil
 }
+
+type CourseEnrollmentCount struct {
+	CourseID      int
+	CourseName    string
+	TotalStudents int
+}
+
+func GetStudentCountCID() ([]CourseEnrollmentCount, error) {
+	query := `
+	SELECT course_id, COUNT(student_id) AS total_students
+	FROM enrollment
+	GROUP BY course_id;
+	`
+	rows, err := DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var courseEnrollmentsCount []CourseEnrollmentCount
+	for rows.Next() {
+		var ce CourseEnrollmentCount
+		err := rows.Scan(&ce.CourseID, &ce.TotalStudents)
+		if err != nil {
+			return nil, err
+		}
+		course, err := GetCourse(int16(ce.CourseID))
+		if err != nil {
+			return nil, err
+		}
+		ce.CourseName = course.CourseName
+		courseEnrollmentsCount = append(courseEnrollmentsCount, ce)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return courseEnrollmentsCount, nil
+}
+
+type StudentSemesterCount struct {
+	Semester     string
+	TotalStudent int16
+}
+
+func GetStudentCountSemester() ([]StudentSemesterCount, error) {
+	query := `
+		SELECT semester, COUNT(student_id) AS total_students
+		FROM enrollment
+		GROUP BY semester
+	`
+	rows, err := DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var result []StudentSemesterCount
+	for rows.Next() {
+		var s StudentSemesterCount
+		if err = rows.Scan(&s.Semester, &s.TotalStudent); err != nil {
+			return nil, err
+		}
+
+		result = append(result, s)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+type CourseGrading struct {
+	CourseName  string
+	Score       float32
+	CourseGrade string
+}
+
+func CourseGrades() ([]CourseGrading, error) {
+	query := `
+		SELECT course_id, AVG(score) AS average_score
+		FROM enrollment
+		GROUP BY course_id
+	`
+	rows, err := DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var result []CourseGrading
+	for rows.Next() {
+		var s CourseGrading
+		var courseID int16
+		if err = rows.Scan(&courseID, &s.Score); err != nil {
+			return nil, err
+		}
+
+		s.CourseGrade = SelectGrade(s.Score)
+		course, err := GetCourse(courseID)
+		if err != nil {
+			return nil, err
+		}
+		s.CourseName = course.CourseName
+
+		result = append(result, s)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+type StudentsGrading struct {
+	StudentName   string
+	StudentScore  float32
+	StudentsGrade string
+}
+
+func StudentsGrades() ([]StudentsGrading, error) {
+	query := `
+		SELECT student_id, AVG(score) AS average_score
+		FROM enrollment
+		GROUP BY student_id
+	`
+
+	rows, err := DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var result []StudentsGrading
+	for rows.Next() {
+		var s StudentsGrading
+		var studentID int16
+		if err = rows.Scan(&studentID, &s.StudentScore); err != nil {
+			return nil, err
+		}
+
+		s.StudentsGrade = SelectGrade(s.StudentScore)
+		student, err := GetStudent(studentID)
+		if err != nil {
+			return nil, err
+		}
+		s.StudentName = fmt.Sprintf("%s %s", student.FName, student.LName)
+
+		result = append(result, s)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}

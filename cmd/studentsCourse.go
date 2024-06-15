@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/EmilioCliff/collage-cli/db"
 	"github.com/spf13/cobra"
 )
 
@@ -15,7 +16,13 @@ var studentsCourseCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Long:  `This will display the total number of students for each cid...courseID`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("studentsCourse called")
+		totalStudents, err := db.GetStudentCountCID()
+		if err != nil {
+			fmt.Println("failed to calculate: ", err)
+		}
+		for _, data := range totalStudents {
+			fmt.Printf("%v - %v\n", data.CourseName, data.TotalStudents)
+		}
 	},
 }
 

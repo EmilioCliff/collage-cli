@@ -13,18 +13,21 @@ import (
 // studentsCmd represents the students command
 var studentsCmd = &cobra.Command{
 	Use:   "students",
-	Short: "Counts the total number of students",
-	Long:  `Counts the total number of students`,
+	Short: "Calculates the students grades",
+	Long:  `Calculates the students grades`,
 	Run: func(cmd *cobra.Command, args []string) {
-		totalStudents, err := db.CountStudents()
+		results, err := db.StudentsGrades()
 		if err != nil {
-			fmt.Println("failed to count students: ", err)
+			fmt.Println("coulnt calculate: ", err)
 			return
 		}
-		fmt.Println(totalStudents)
+
+		for _, data := range results {
+			fmt.Printf("%v - %v - %v\n", data.StudentName, data.StudentsGrade, data.StudentScore)
+		}
 	},
 }
 
 func init() {
-	countCmd.AddCommand(studentsCmd)
+	gradeCmd.AddCommand(studentsCmd)
 }
