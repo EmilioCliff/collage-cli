@@ -67,6 +67,20 @@ func GetStudent(studentID int16) (Student, error) {
 	return result, nil
 }
 
+func CountStudents() (int16, error) {
+	query := `
+		SELECT COUNT(*) AS total_students
+		FROM students
+	`
+	row := DB.QueryRow(query)
+	var result int16
+	if err := row.Scan(&result); err != nil {
+		return 0, err
+	}
+
+	return result, nil
+}
+
 type CourseResponse struct {
 	CourseName string
 	Semester   string
