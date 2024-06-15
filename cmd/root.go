@@ -23,6 +23,6 @@ func InitializeCommands() {
 	RootCmd.AddCommand(listStudentsCmd)
 	RootCmd.AddCommand(searchCourseCmd)
 	RootCmd.AddCommand(searchStudentCmd)
+	RootCmd.AddCommand(countCmd)
 	RootCmd.AddCommand(clearCmd)
-
 }
