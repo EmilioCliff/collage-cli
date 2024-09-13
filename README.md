@@ -1,6 +1,6 @@
 # 📚 Collage CLI - Student Management System
 
-Welcome to the **Collage CLI**! 🎓 This command-line interface (CLI) tool is designed for managing student, courses and semesters in a collage/institution records efficiently. Built with the power of Go, the Cobra library and the PromptUI, it provides a user-friendly way to handle various student management tasks directly from your terminal. 🚀
+Welcome to the **Collage CLI**! 🎓 This command-line interface (CLI) tool is designed for managing student, courses and semesters in a collage/institution records efficiently. Built with the power of Go, the Cobra library, the PromptUI and sqlite as our database, it provides a user-friendly way to handle various student management tasks directly from your terminal. 🚀
 
 ## 🚀 Features
 
