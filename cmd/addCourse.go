@@ -39,7 +39,7 @@ func addCourse() (db.Course, error) {
 
 	totalCreditPrompt := PromptContent{
 		"Please provide course total credit",
-		"Course Credit (29000): ",
+		"Course Credit (ie. 29000): ",
 	}
 	totalCredit := promptGetInput(totalCreditPrompt)
 	totalCreditint, err := strconv.Atoi(totalCredit)

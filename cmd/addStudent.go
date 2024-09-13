@@ -40,7 +40,7 @@ func addStudent() db.Student {
 
 	dobPrompt := PromptContent{
 		"Please provide students Date Of Birth",
-		"Date Of Birth (2006-10-04): ",
+		"Date Of Birth (ie. 2006-10-04): ",
 	}
 	dob := promptGetInput(dobPrompt)
 

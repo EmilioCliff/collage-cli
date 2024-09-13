@@ -1,6 +1,3 @@
-/*
-Copyright © 2024 Emilio Cliff emiliocliff@gmail.com
-*/
 package main
 
 import (
